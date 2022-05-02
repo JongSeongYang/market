@@ -19,15 +19,16 @@ public enum ExceptionCode {
     ACCOUNT_NOT_FOUND(10006, "사용자를 찾을 수 없습니다."),
     ACCOUNT_SUSPENSION(10007, "계정 정지된 사용자입니다."),
     ACCOUNT_LOCK(10008, "계정이 잠긴 사용자입니다."),
-    LIMIT_SMS(10009, "하루 전송 가능한 개수를 초과했습니다."),
-    SMS_SEND_FAIL(10010, "문자메세지 전송이 실패하였습니다."),
-    SMS_WRONG_CODE(10011, "인증코드를 잘못 입력하였습니다."),
-    SMS_EXPIRED_CODE(10012, "인증코드가 만료되었습니다."),
 
+    PRODUCT_NOT_FOUND(20001,"상품이 존재하지 않습니다."),
+    PRODUCT_DELETED(20002,"삭제된 상품입니다."),
+    PRODUCT_CREATE_FAIL(20003,"상품 업데이트가 실패하였습니다."),
+    PRODUCT_UPDATE_FAIL(20004,"상품 생성이 실패하였습니다."),
+    PRODUCT_DELETE_FAIL(20005,"상품 삭제를 실패하였습니다."),
+    PRODUCT_DUPLICATE(20005,"이미 존재하는 상품입니다."),
     /* 500 internal server error */
     INTERNAL_ERROR(500, "Internal server error")
     ;
-
 
     private final int code;
     private final String message;
