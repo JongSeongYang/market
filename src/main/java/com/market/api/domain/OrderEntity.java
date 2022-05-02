@@ -28,7 +28,6 @@ public class OrderEntity extends BaseTimeEntity{
   private MemberEntity memberEntity;
   private String orderStatus;
   private Integer price;
-  private LocalDateTime deletedTime;
 
   @BatchSize(size = 100)
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderEntity")
