@@ -27,7 +27,9 @@ public class OrderEntity extends BaseTimeEntity{
   @JoinColumn(name = "memberId")
   private MemberEntity memberEntity;
   private String orderStatus;
-  private Integer price;
+  private Integer totalPrice;
+  private String payment;
+  private LocalDateTime cancelTime; // 취소 시간
 
   @BatchSize(size = 100)
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderEntity")

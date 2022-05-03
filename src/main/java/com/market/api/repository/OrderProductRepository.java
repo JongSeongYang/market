@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderProductRepository extends JpaRepository<OrderProductEntity, Long> {
-
+    OrderProductEntity findByOrderEntity_IdAndProductEntity_IdAndCancelTimeIsNull(Long orderId, Long productId);
 }

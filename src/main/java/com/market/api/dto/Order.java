@@ -11,8 +11,30 @@ public class Order {
     @AllArgsConstructor
     @Getter
     @Setter
+    public static class OrderRequestList {
+        private List<OrderRequest> productList;
+        private Integer payment; // 0: credit_card, 1: cash, 2: bank_transfer
+    }
+
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
     public static class OrderRequest {
-        private List<Long> productList;
+        private Long id;
+        private Integer price;
+        private Integer count;
+    }
+
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    public static class OrderUpdateRequestList {
+        private List<OrderRequest> productList;
+        private Long orderId; // 0: credit_card, 1: cash, 2: bank_transfer
     }
 
     @Builder
@@ -44,7 +66,7 @@ public class Order {
     @AllArgsConstructor
     @Getter
     @Setter
-    public static class ProductCommonResponse {
+    public static class OrderCommonResponse {
         private Boolean result;
         private String message;
     }

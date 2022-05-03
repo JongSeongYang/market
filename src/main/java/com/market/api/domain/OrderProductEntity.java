@@ -27,8 +27,10 @@ public class OrderProductEntity extends BaseTimeEntity{
   @ManyToOne
   @JoinColumn(name = "productId")
   private ProductEntity productEntity;
-  private Integer orderPrice;
-  private Integer count;
-  private LocalDateTime deletedTime;
+  private Integer productPrice; // 상품 구매 가격
+  private Integer totalPrice; // 상품별 총액
+  private Integer count; // 수량
+  private Integer status; // 상품별 상태
+  private LocalDateTime cancelTime; // 취소 시간
 }
 
