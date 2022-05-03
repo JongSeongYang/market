@@ -1,5 +1,6 @@
 package com.market.api.service;
 
+import com.market.api.config.AppConfig;
 import com.market.api.domain.MemberEntity;
 import com.market.api.dto.Auth;
 import com.market.api.dto.Member;
@@ -31,6 +32,7 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final HashUtils hashUtils;
     private final AesUtils aesUtils;
+    private final AppConfig appConfig;
 
     @Transactional
     public Long save(MemberEntity memberEntity) {
@@ -50,7 +52,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Long update(HttpServletRequest request, Member.MemberRequest memberRequest) {
+    public Member.MemberCommonResponse update(HttpServletRequest request, Member.MemberRequest memberRequest) {
         MemberEntity exist = findOneById(request);
         String email = memberRequest.getEmail();
         String password = memberRequest.getPassword();
@@ -68,8 +70,13 @@ public class MemberService {
             }
         }
         memberRepository.save(exist);
-        return exist.getId();
+        return Member.MemberCommonResponse.builder().result(true).message("UPDATE_SUCCESS").build();
     }
+    public Member.MemberResponse getMemberInfo(HttpServletRequest request) {
+        MemberEntity memberEntity = findOneByEmail(request, ExceptionCode.ACCOUNT_NOT_FOUND);
+        return appConfig.modelMapper().map(memberEntity, Member.MemberResponse.class);
+    }
+
 
     public MemberEntity findOneByEmail(HttpServletRequest request, ExceptionCode e) {
         String email = jwtTokenProvider.getEmailByClaims(request);

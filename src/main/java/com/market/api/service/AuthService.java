@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +20,19 @@ import java.util.Random;
 public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final MemberService memberService;
     private final HashUtils hashUtils;
-    private final AesUtils aesUtils;
 
+    @Transactional
+    public Auth.AuthResponse signUp(Auth.SignUpRequest signUpRequest, HttpServletRequest request) {
+
+        MemberEntity memberEntity = memberService.createMember(signUpRequest);
+        if (null == memberEntity) {
+            log.error("signUp >> MEMBER_CREATE_FAIL");
+            throw new CustomResponseStatusException(ExceptionCode.SIGN_UP_FAIL,"");
+        }
+        return getAuthResponse(true, memberEntity, "SIGN_UP_SUCCESS");
+    }
 
     @Transactional(noRollbackFor = CustomResponseStatusException.class)
     public Auth.AuthResponse signIn(MemberEntity memberEntity, String password, String deviceToken) {

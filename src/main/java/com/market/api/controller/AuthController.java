@@ -2,6 +2,7 @@ package com.market.api.controller;
 
 import com.market.api.domain.MemberEntity;
 import com.market.api.dto.Auth;
+import com.market.api.exception.CustomResponseStatusException;
 import com.market.api.exception.ExceptionCode;
 import com.market.api.service.AuthService;
 import com.market.api.service.MemberService;
@@ -24,6 +25,17 @@ public class AuthController {
 
     private final AuthService authService;
     private final MemberService memberService;
+
+    @ApiOperation(value = "회원가입", notes = "회원가입")
+    @PostMapping(value = "/signUp", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Auth.AuthResponse> signUp(@RequestBody Auth.SignUpRequest signUpRequest,
+                                                    HttpServletRequest request) {
+        if(memberService.checkDupEmail(signUpRequest.getEmail())){
+            throw new CustomResponseStatusException(ExceptionCode.DUPLICATED_MEMBER, "");
+        }
+        Auth.AuthResponse response = authService.signUp(signUpRequest, request);
+        return ResponseEntity.ok(response);
+    }
 
     @ApiOperation(value = "Token 유효 확인", notes = "Token 유효 확인")
     @GetMapping(value = "/token/verify", produces = MediaType.APPLICATION_JSON_VALUE)
