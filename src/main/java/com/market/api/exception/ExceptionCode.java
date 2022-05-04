@@ -28,7 +28,7 @@ public enum ExceptionCode {
     PRODUCT_CREATE_FAIL(20003,"상품 업데이트가 실패하였습니다."),
     PRODUCT_UPDATE_FAIL(20004,"상품 생성이 실패하였습니다."),
     PRODUCT_DELETE_FAIL(20005,"상품 삭제를 실패하였습니다."),
-    PRODUCT_DUPLICATE(20005,"이미 존재하는 상품입니다."),
+    PRODUCT_DUPLICATE(20006,"이미 존재하는 상품입니다."),
 
     /* 30000 order */
     PAYMENT_NOT_FOUND(30001,"결재 수단이 존재하지 않습니다."),
