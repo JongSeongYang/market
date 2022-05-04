@@ -6,6 +6,7 @@ import com.market.api.exception.CustomResponseStatusException;
 import com.market.api.exception.ExceptionCode;
 import com.market.api.service.AuthService;
 import com.market.api.service.MemberService;
+import com.market.api.utils.annotation.Authenticate;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @Authenticate
     @ApiOperation(value = "Token 유효 확인", notes = "Token 유효 확인")
     @GetMapping(value = "/token/verify", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Auth.AuthResponse> tokenCheck(HttpServletRequest request) {
@@ -50,7 +52,7 @@ public class AuthController {
     @PostMapping(value = "/signIn", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Auth.AuthResponse> signIn(@RequestBody Auth.SignInRequest signInRequest) {
         MemberEntity memberEntity = memberService.findOneByEmail(signInRequest.getEmail(), ExceptionCode.SIGN_IN_FAIL);
-        Auth.AuthResponse response = authService.signIn(memberEntity, signInRequest.getPassword(), signInRequest.getDeviceToken());
+        Auth.AuthResponse response = authService.signIn(memberEntity, signInRequest.getPassword());
         return ResponseEntity.ok(response);
     }
 }

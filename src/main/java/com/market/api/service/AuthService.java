@@ -35,7 +35,7 @@ public class AuthService {
     }
 
     @Transactional(noRollbackFor = CustomResponseStatusException.class)
-    public Auth.AuthResponse signIn(MemberEntity memberEntity, String password, String deviceToken) {
+    public Auth.AuthResponse signIn(MemberEntity memberEntity, String password) {
 
         boolean equals = hashUtils.toPasswordHash(password).equals(memberEntity.getPassword());
         // 비밀번호가 틀릴 경우
@@ -82,8 +82,11 @@ public class AuthService {
 
     private Integer checkPwdFailCnt(MemberEntity memberEntity) {
         Integer signInFailCount = memberEntity.getPasswordFailCnt();
-        if (signInFailCount >= 5)
+        if (signInFailCount >= 5) {
+            log.error("Sign In >> WRONG_PWD_FIVE");
+            memberEntity.setStatus(2);
             throw new CustomResponseStatusException(ExceptionCode.WRONG_PWD_FIVE, "");
+        }
         return signInFailCount;
     }
 }
