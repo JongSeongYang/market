@@ -38,7 +38,6 @@ public class OrderService {
 
     @Transactional
     public Order.OrderCommonResponse create(MemberEntity memberEntity, Order.OrderRequestList orderRequestList) {
-        int totalPrice = 0;
         try {
             OrderEntity orderEntity = createOrderEntity(memberEntity, orderRequestList);
 
@@ -48,9 +47,12 @@ public class OrderService {
                                 .orElseThrow(() -> new CustomResponseStatusException(ExceptionCode.PRODUCT_NOT_FOUND, ""));
                         checkPriceAndCount(o, product);
                         OrderProductEntity orderProductEntity = createOrderProductEntity(orderEntity, o, product);
-                        o.setPrice(o.getPrice() + orderProductEntity.getTotalPrice()); // 주문 전체 금액 저장
+                        orderEntity.setTotalPrice(orderEntity.getTotalPrice() + orderProductEntity.getTotalPrice()); // 주문 전체 금액 저장
+                        OrderProductEntity save = orderProductRepository.save(orderProductEntity);
+                        product.setStock(product.getStock()-o.getCount()); // 상품 재고 감소
                     });
             publisher.publishEvent((new OrderCreatedEvent(orderEntity)));
+            orderRepository.save(orderEntity);
         } catch (CustomResponseStatusException e) {
             throw e;
         } catch (Exception e) {
@@ -61,7 +63,7 @@ public class OrderService {
     }
 
     private void checkPriceAndCount(Order.OrderRequest o, ProductEntity product) {
-        if (o.getCount() <= 0 || o.getPrice() < 0) {
+        if (o.getCount() <= 0) {
             log.error("order >> WRONG_ORDER_REQUEST({})", product.getName());
             throw new CustomResponseStatusException(ExceptionCode.WRONG_ORDER_REQUEST, " >> " + product.getName());
         }
@@ -71,27 +73,24 @@ public class OrderService {
         }
     }
 
-    @Transactional
     public OrderProductEntity createOrderProductEntity(OrderEntity orderEntity, Order.OrderRequest o, ProductEntity product) {
-        OrderProductEntity orderProductEntity = OrderProductEntity.builder()
+        return  OrderProductEntity.builder()
                 .orderEntity(orderEntity)
                 .productEntity(product)
-                .productPrice(o.getPrice())
-                .totalPrice(o.getPrice() * o.getCount())
+                .productPrice(product.getPrice())
+                .totalPrice(product.getPrice() * o.getCount())
                 .count(o.getCount())
                 .status(0)
                 .build();
-        return orderProductRepository.save(orderProductEntity);
     }
 
-    @Transactional
     public OrderEntity createOrderEntity(MemberEntity memberEntity, Order.OrderRequestList orderRequestList) {
-        OrderEntity orderEntity = OrderEntity.builder()
+        return OrderEntity.builder()
                 .memberEntity(memberEntity)
                 .orderStatus(OrderStatusType.ORDER_RECEPTION.getStatus())
                 .payment(getPayment(orderRequestList.getPayment()))
+                .totalPrice(0)
                 .build();
-        return orderRepository.save(orderEntity);
     }
 
     @Transactional
@@ -123,6 +122,8 @@ public class OrderService {
                                 = orderProductRepository.findByOrderEntity_IdAndProductEntity_IdAndCancelTimeIsNull(requestList.getOrderId(), l.getId());
                         orderProductEntity.setStatus(1);
                         orderProductEntity.setCancelTime(now);
+                        orderEntity.setTotalPrice(orderEntity.getTotalPrice()-orderProductEntity.getTotalPrice()); // 전체 주문 금액에서 제외
+                        orderProductEntity.getProductEntity().setStock(orderProductEntity.getProductEntity().getStock()+orderProductEntity.getCount()); // 상품 재고 증가
                     });
 
             int afterSize = (int) orderEntity.getOrderProductEntityList().stream().filter(l -> l.getStatus() == 0).count();

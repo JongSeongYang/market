@@ -23,7 +23,6 @@ public class Order {
     @Setter
     public static class OrderRequest {
         private Long id;
-        private Integer price;
         private Integer count;
     }
 

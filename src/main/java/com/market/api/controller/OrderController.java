@@ -8,6 +8,7 @@ import com.market.api.service.AuthService;
 import com.market.api.service.MemberService;
 import com.market.api.service.OrderService;
 import com.market.api.service.ProductService;
+import com.market.api.utils.annotation.Authenticate;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class OrderController {
     private final OrderService orderService;
     private final MemberService memberService;
 
+    @Authenticate
     @ApiOperation(value = "주문", notes = "주문")
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Order.OrderCommonResponse> create(HttpServletRequest request,
@@ -37,6 +39,7 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
+    @Authenticate
     @ApiOperation(value = "주문 취소", notes = "주문 취소")
     @PostMapping(value = "/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Order.OrderCommonResponse> cancel(HttpServletRequest request,

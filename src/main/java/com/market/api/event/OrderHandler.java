@@ -12,16 +12,16 @@ public class OrderHandler {
 
     @TransactionalEventListener
     public void orderCreateNotice(OrderCreatedEvent event) {
-        log.info("Order Success + ({})",event.getOrderEntity().getCreatedTime());
+        log.info("Order Success ({})",event.getOrderEntity().getCreatedTime());
     }
 
     @TransactionalEventListener
     public void orderAllCanceledNotice(OrderAllCanceledEvent event) {
-        log.info("Order All Cancel Success + ({})",event.getOrderEntity().getCancelTime());
+        log.info("Order All Cancel Success ({})",event.getOrderEntity().getCancelTime());
     }
 
     @TransactionalEventListener
     public void orderPartCanceledNotice(OrderPartCanceledEvent event) {
-        log.info("Order Part Cancel Success + ({})",event.getNow());
+        log.info("Order Part Cancel Success ({})",event.getNow());
     }
 }
