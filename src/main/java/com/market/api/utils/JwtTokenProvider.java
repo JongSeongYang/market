@@ -64,11 +64,11 @@ public class JwtTokenProvider {
     }
 
     public Long getMemberId(String token) {
-        return Jwts.parserBuilder().setSigningKey(secretKeyMaster)
+        return Long.parseLong(Jwts.parserBuilder().setSigningKey(secretKeyMaster)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("id", Long.class);
+                .get("id", String.class));
     }
 
     public Map<String, String> getClaims(String token) {

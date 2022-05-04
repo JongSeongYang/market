@@ -30,7 +30,6 @@ public class UserAuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        System.out.println(">>> UserAuthInterceptor.preHandle 호출");
         if (HttpMethod.OPTIONS.matches(request.getMethod())) {
             return true;
         }
@@ -40,16 +39,18 @@ public class UserAuthInterceptor implements HandlerInterceptor {
             String token = extract(request, "Bearer");
 
             // 토큰이 없을 경우
-            if (StringUtils.isEmpty(token)) {
+            if (token.equals("")) {
+                log.error("Interceptor >> UNAUTHORIZED(Empty Token)");
                 throw new CustomResponseStatusException(ExceptionCode.UNAUTHORIZED, "");
             }
 
             if (!jwtTokenProvider.validateToken(token)) {
+                log.error("Interceptor >> INVALID_TOKEN");
                 throw new CustomResponseStatusException(ExceptionCode.INVALID_TOKEN, "");
             }
 
             Map<String, String> map = jwtTokenProvider.getClaims(token);
-            request.setAttribute("memberId", Integer.parseInt(map.get("id")));
+            request.setAttribute("id", Long.parseLong(map.get("id")));
             request.setAttribute("name", map.get("name"));
             request.setAttribute("email", map.get("email"));
         }
@@ -60,7 +61,7 @@ public class UserAuthInterceptor implements HandlerInterceptor {
         Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
-            if (value.toLowerCase().startsWith(type.toLowerCase())) {
+            if (value.startsWith(type)) {
                 return value.substring(type.length()).trim();
             }
         }
