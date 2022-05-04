@@ -10,7 +10,7 @@ import static org.springframework.http.HttpStatus.OK;
 @AllArgsConstructor
 public enum ExceptionCode {
 
-    /* 10000  */
+    /* 10000 auth */
     EMAIL_NOT_FOUND(10001,"이메일이 존재하지 않습니다."),
     SIGN_IN_FAIL(10002,"아이디와 비밀번호가 일치하지 않습니다."),
     WRONG_PWD_FIVE(10003,"비밀번호 입력이 5회 이상 실패했습니다."),
@@ -22,6 +22,7 @@ public enum ExceptionCode {
     SIGN_UP_FAIL(10009, "회원가입에 실패하였습니다."),
     DUPLICATED_MEMBER(10010, "이미 가입되어 있는 회원입니다."),
 
+    /* 20000 product */
     PRODUCT_NOT_FOUND(20001,"상품이 존재하지 않습니다."),
     PRODUCT_DELETED(20002,"삭제된 상품입니다."),
     PRODUCT_CREATE_FAIL(20003,"상품 업데이트가 실패하였습니다."),
@@ -29,6 +30,7 @@ public enum ExceptionCode {
     PRODUCT_DELETE_FAIL(20005,"상품 삭제를 실패하였습니다."),
     PRODUCT_DUPLICATE(20005,"이미 존재하는 상품입니다."),
 
+    /* 30000 order */
     PAYMENT_NOT_FOUND(30001,"결재 수단이 존재하지 않습니다."),
     OUT_OF_STOCK(30002,"재고가 없습니다."),
     LACK_OF_QUANTITY(30003,"수량이 부족합니다."),
