@@ -7,6 +7,7 @@ import com.market.api.exception.ExceptionCode;
 import com.market.api.service.AuthService;
 import com.market.api.service.MemberService;
 import com.market.api.service.ProductService;
+import com.market.api.utils.annotation.Authenticate;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @Authenticate
     @ApiOperation(value = "상품 등록", notes = "상품 등록")
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product.ProductCommonResponse> create(@RequestBody Product.ProductRequest request) {
@@ -33,6 +35,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @Authenticate
     @ApiOperation(value = "상품 수정", notes = "상품 수정")
     @PostMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product.ProductCommonResponse> update(@RequestBody Product.ProductRequest request,
@@ -41,6 +44,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @Authenticate
     @ApiOperation(value = "상품 삭제", notes = "상품 삭제")
     @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product.ProductCommonResponse> delete(@PathVariable("id") Long id) {
@@ -51,7 +55,7 @@ public class ProductController {
     @ApiOperation(value = "상품 리스트", notes = "상품 리스트")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<Product.ProductListResponse>> list(@RequestParam Integer page) {
-        Page<Product.ProductListResponse> response = productService.getList(page - 1);
+        Page<Product.ProductListResponse> response = productService.getList(page);
         return ResponseEntity.ok(response);
     }
 

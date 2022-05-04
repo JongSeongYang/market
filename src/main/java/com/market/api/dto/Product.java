@@ -39,6 +39,7 @@ public class Product {
         private String category;
         private String description;
         private Integer price;
+        private Integer stock;
     }
 
     @Builder
