@@ -29,10 +29,9 @@ public class MemberController {
     }
 
 
-    @Authenticate
-    @ApiOperation(value = "Member Update", notes = "Member Update")
+    @ApiOperation(value = "Pwd Update", notes = "Pwd Update")
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Member.MemberCommonResponse> memberUpdate(HttpServletRequest request,
+    public ResponseEntity<Member.MemberCommonResponse> pwdUpdate(HttpServletRequest request,
                                                               @RequestBody Member.MemberRequest memberRequest) {
         return ResponseEntity.ok(memberService.update(request, memberRequest));
     }

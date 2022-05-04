@@ -47,15 +47,18 @@ public class MemberService {
                 .email(signUpRequest.getEmail())
                 .passwordFailCnt(0)
                 .password(hashUtils.toPasswordHash(signUpRequest.getPassword()))
+                .status(0)
                 .build();
         return memberRepository.save(memberEntity);
     }
 
     @Transactional
     public Member.MemberCommonResponse update(HttpServletRequest request, Member.MemberRequest memberRequest) {
-        MemberEntity exist = findOneById(request);
+
         String email = memberRequest.getEmail();
         String password = memberRequest.getPassword();
+        MemberEntity exist = memberRepository.findByEmailAndDeletedTimeIsNull(email)
+                .orElseThrow(() -> new CustomResponseStatusException(ExceptionCode.EMAIL_NOT_FOUND, ""));
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
         if (null != password) {
@@ -64,13 +67,9 @@ public class MemberService {
                 exist.setPassword(hashed);
             }
         }
-        if (email != null) {
-            if (!email.equals(exist.getEmail())) {
-                exist.setEmail(email);
-            }
-        }
+        exist.setStatus(0);
         memberRepository.save(exist);
-        return Member.MemberCommonResponse.builder().result(true).message("UPDATE_SUCCESS").build();
+        return Member.MemberCommonResponse.builder().result(true).message("PWD_UPDATE_SUCCESS").build();
     }
     public Member.MemberResponse getMemberInfo(HttpServletRequest request) {
         MemberEntity memberEntity = findOneByEmail(request, ExceptionCode.ACCOUNT_NOT_FOUND);

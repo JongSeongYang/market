@@ -11,7 +11,6 @@ public class Member {
     @Setter
     public static class MemberRequest {
         private String password;
-        private String name;
         private String email;
     }
 
